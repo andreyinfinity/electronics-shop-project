@@ -1,8 +1,6 @@
 import csv
 import os.path
 
-src_file = os.path.join(os.path.dirname(__file__), 'items.csv')
-
 
 class Item:
     """
@@ -41,6 +39,7 @@ class Item:
 
     @classmethod
     def instantiate_from_csv(cls):
+        src_file = os.path.join(os.path.dirname(__file__), 'items.csv')
         with open(src_file, newline='', encoding='windows-1251') as file:
             csv_file = csv.DictReader(file)
             cls.all.clear()
