@@ -9,7 +9,7 @@ class Item:
     pay_rate = 1.0
     all = []
 
-    def __init__(self, name: str, price: float, quantity: int) -> None:
+    def __init__(self, name: str, price: float | int | str, quantity: int | str) -> None:
         """
         Создание экземпляра класса item.
 
@@ -18,9 +18,15 @@ class Item:
         :param quantity: Количество товара в магазине.
         """
         self.__name = name
-        self.price = price
-        self.quantity = quantity
+        self.price = self.string_to_number(price)
+        self.quantity = self.string_to_number(quantity)
         Item.all.append(self)
+
+    def __repr__(self):
+        return f"Item('{self.__name}', {self.price}, {self.quantity})"
+
+    def __str__(self):
+        return f"{self.__name}"
 
     @property
     def name(self):
@@ -34,7 +40,7 @@ class Item:
             self.__name = name[:10]
 
     @staticmethod
-    def string_to_number(number: str) -> int:
+    def string_to_number(number: str | float) -> int:
         return int(float(number))
 
     @classmethod
