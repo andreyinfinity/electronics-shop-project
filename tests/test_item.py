@@ -3,6 +3,28 @@ import pytest
 from src.item import Item
 
 
+@pytest.fixture
+def test_item1():
+    return Item('Something', 10_000.0, 13)
+
+
+@pytest.fixture
+def test_item2():
+    return Item('Anything', 30_000.0, 5)
+
+
+def test_repr(test_item1, test_item2):
+    """Тест метода __repr__"""
+    assert test_item1.__repr__() == "Item('Something', 10000, 13)"
+    assert test_item2.__repr__() == "Item('Anything', 30000, 5)"
+
+
+def test_str(test_item1, test_item2):
+    """Тест метода __str__"""
+    assert test_item1.__str__() == "Something"
+    assert test_item2.__str__() == "Anything"
+
+
 def test_name():
     """
     Тест сеттера класса, проверяющий длину наименования товара (не более 10 символов).
@@ -34,16 +56,6 @@ def test_string_to_number():
     assert Item.string_to_number('5') == 5
     assert Item.string_to_number('5.0') == 5
     assert Item.string_to_number('5.5') == 5
-
-
-@pytest.fixture
-def test_item1():
-    return Item('Something', 10_000.0, 13)
-
-
-@pytest.fixture
-def test_item2():
-    return Item('Anything', 30_000.0, 5)
 
 
 def test_calculate_total_price(test_item1, test_item2):
