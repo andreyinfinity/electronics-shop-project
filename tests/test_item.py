@@ -13,6 +13,13 @@ def test_item2():
     return Item('Anything', 30_000.0, 5)
 
 
+def test_add(test_item1, test_item2):
+    assert test_item1 + test_item2 == 18
+    assert test_item2 + test_item1 == 18
+    with pytest.raises(TypeError):
+        test_item1 + 12
+
+
 def test_repr(test_item1, test_item2):
     """Тест метода __repr__"""
     assert test_item1.__repr__() == "Item('Something', 10000, 13)"
