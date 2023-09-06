@@ -16,6 +16,8 @@ def test_item2():
 def test_add(test_item1, test_item2):
     assert test_item1 + test_item2 == 18
     assert test_item2 + test_item1 == 18
+    with pytest.raises(TypeError):
+        test_item1 + 12
 
 
 def test_repr(test_item1, test_item2):
