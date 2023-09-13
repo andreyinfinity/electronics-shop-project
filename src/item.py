@@ -1,5 +1,6 @@
 import csv
 import os.path
+from src.errors import InstantiateCSVError
 
 
 class Item:
@@ -8,6 +9,7 @@ class Item:
     """
     pay_rate = 1.0
     all = []
+    filename = 'items.csv'
 
     def __init__(self, name: str, price: float | int | str, quantity: int | str) -> None:
         """
@@ -50,12 +52,34 @@ class Item:
 
     @classmethod
     def instantiate_from_csv(cls):
-        src_file = os.path.join(os.path.dirname(__file__), 'items.csv')
-        with open(src_file, newline='', encoding='windows-1251') as file:
-            csv_file = csv.DictReader(file)
-            cls.all.clear()
-            for row in csv_file:
-                cls(row.get('name'), cls.string_to_number(row.get('price')), cls.string_to_number(row.get('quantity')))
+        """
+        Метод для получения экземпляров класса из табличного файла csv.
+        """
+        src_file = os.path.join(os.path.dirname(__file__), cls.filename)
+        cls.all.clear()
+        try:
+            with open(src_file, newline='', encoding='windows-1251') as file:
+                csv_file = csv.DictReader(file)
+                for row in csv_file:
+                    cls.check_table(row)
+                    cls(row['name'],
+                        cls.string_to_number(row['price']),
+                        cls.string_to_number(row['quantity']))
+        except FileNotFoundError as er:
+            print(f'{er.__class__.__name__}: Отсутствует файл {cls.filename}')
+            return f'{er.__class__.__name__}: Отсутствует файл {cls.filename}'
+        except InstantiateCSVError as er:
+            print(f'{er.__class__.__name__}: {er.message}')
+            return f'{er.__class__.__name__}: {er.message}'
+
+    @classmethod
+    def check_table(cls, row):
+        """
+        Метод для проверки названий столбцов.
+        Вызывает пользовательское исключение InstantiateCSVError, если один из столбцов отсутствует.
+        """
+        if not ('name' in row and 'price' in row and 'quantity' in row):
+            raise InstantiateCSVError(cls.filename)
 
     def calculate_total_price(self) -> float:
         """
