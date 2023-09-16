@@ -41,10 +41,10 @@ class Item:
 
     @name.setter
     def name(self, name):
-        if len(name) <= 10:
-            self.__name = name
-        else:
-            self.__name = name[:10]
+        # if len(name) <= 10:
+        #     self.__name = name
+        # else:
+        self.__name = name[:10]
 
     @staticmethod
     def string_to_number(number: str | float) -> int:
@@ -65,12 +65,10 @@ class Item:
                     cls(row['name'],
                         cls.string_to_number(row['price']),
                         cls.string_to_number(row['quantity']))
-        except FileNotFoundError as er:
-            print(f'{er.__class__.__name__}: Отсутствует файл {cls.filename}')
-            return f'{er.__class__.__name__}: Отсутствует файл {cls.filename}'
-        except InstantiateCSVError as er:
-            print(f'{er.__class__.__name__}: {er.message}')
-            return f'{er.__class__.__name__}: {er.message}'
+        except FileNotFoundError:
+            raise FileNotFoundError(cls.filename)
+        except InstantiateCSVError:
+            raise InstantiateCSVError(cls.filename)
 
     @classmethod
     def check_table(cls, row):
